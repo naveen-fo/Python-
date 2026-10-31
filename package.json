@@ -1,0 +1,13 @@
+{
+  "name": "pystep",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Only needed for the optional Android APK build (Capacitor). The website itself needs no build.",
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/core": "^6.2.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.0"
+  }
+}

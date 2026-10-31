@@ -1,0 +1,46 @@
+# OPTIONAL. Only for building an Android APK. The website works without this.
+# GitHub runs it only from .github/workflows/android-apk.yml (see README).
+name: Build Android APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install Capacitor
+        run: npm install
+
+      - name: Copy website files into www
+        run: |
+          mkdir www
+          cp index.html index.css main.js App.js Scene3D.js python.js curriculum.js sw.js manifest.webmanifest icon.svg pwa-192.png pwa-512.png www/
+
+      - name: Create Android project
+        run: |
+          npx cap add android
+          npx cap sync android
+
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: pystep-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
